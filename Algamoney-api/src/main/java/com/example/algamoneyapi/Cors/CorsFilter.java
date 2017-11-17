@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Order( Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements javax.servlet.Filter {
 
-	String originPermitida	=	"";
+	String originPermitida	=	"https://maxemilioalgamoney.herokuapp.com";
 	
 	
 
