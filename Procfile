@@ -1,1 +1,1 @@
-web: java -jar target/Algamoney-api-versao-1.10.jar
+web: java -jar target/Algamoney-api*.jar
