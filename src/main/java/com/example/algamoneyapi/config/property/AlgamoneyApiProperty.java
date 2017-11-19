@@ -7,7 +7,7 @@ public class AlgamoneyApiProperty {
 
 	private final Seguranca seguranca	=	new		Seguranca();
 	
-	private String originPermitida	=	"https://maxemilioalgamoney.herokuapp.com";
+	private String originPermitida	=	"https://maxemiliotreinamento.herokuapp.com";
 	
 	
 	public Seguranca getSeguranca() {
