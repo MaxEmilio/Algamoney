@@ -106,30 +106,22 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
-		
-		
-		
-		<dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
 
-    </dependency>
-    <dependency>
-      <groupId>com.zaxxer</groupId>
-      <artifactId>HikariCP</artifactId>
-     
-    </dependency>
-    <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>webjars-locator</artifactId>
-    </dependency>
+    	<dependency>
+      		<groupId>com.zaxxer</groupId>	
+      		<artifactId>HikariCP</artifactId>
+    	</dependency>
+    
+	    <dependency>
+	      <groupId>org.webjars</groupId>
+	      <artifactId>webjars-locator</artifactId>
+	    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
       <scope>runtime</scope>
     </dependency>
-
 
 </dependencies>
 
