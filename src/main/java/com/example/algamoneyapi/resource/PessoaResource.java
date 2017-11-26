@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,7 +42,7 @@ public class PessoaResource {
 	private PessoaService 				pessoaService;
 	
 	
-	//																																	((  pesquisa ))
+	//---------------------------------------------------------------------------------------------------------------------------------------  pesquisa 
 	@GetMapping
 	@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_PESSOA' ) and #oauth2.hasScope('read') ")
 	public List<Pessoa> ConsultarPessoas() {		
@@ -52,6 +52,18 @@ public class PessoaResource {
 		return pessoas;
 		
 	}
+	
+	@GetMapping( params= "porNome")
+	@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_PESSOA' ) and #oauth2.hasScope('read') ")
+	public ResponseEntity<?> ConsultarPessoasPorNome(@RequestParam("porNome") String valor) {		
+
+		List<Pessoa> pessoas = pessoaRepository.findByNomeContainingIgnoreCase(valor);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(pessoas) ;
+		
+	}
+	
+	//----------------------------------------------------
 	
 	@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_PESSOA' ) and #oauth2.hasScope('read') ")
 	@PostMapping//																														(( Salvar pessoa  ))

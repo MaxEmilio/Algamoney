@@ -48,6 +48,7 @@ public class LancamentoResource {
 	//																																	Pesquisa Geral Simples
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	public List<Lancamento> buscaLancamentos() {
 		
 		List<Lancamento> lancamentos = lancamentoRepository.findAll();
