@@ -1,10 +1,12 @@
 package com.example.algamoneyapi.resource;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -47,8 +49,8 @@ public class LancamentoResource {
 	
 	//----------------------------------------------------------------------------------------------------------------   Pesquisa    ---------------------------------------------------------------------------------
 	
-	//ok																																								Pesquisa Geral Simples
-	@GetMapping
+	
+	@GetMapping    //ok																															Pesquisa Geral Simples
 	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	public List<Lancamento> buscaLancamentos() {
@@ -59,7 +61,7 @@ public class LancamentoResource {
 	}
 	
 	
-	@GetMapping( params = "lancamentoNome" )//	ok																													Pesquisa por Nome Pessoa
+	@GetMapping( params = "lancamentoNome" )//	ok pesquisa composta																						Pesquisa por Nome Pessoa
 	@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_LANCAMENTO' ) ")
 	public List<Lancamento> pesquisaLancamentoPessoaNome(@RequestParam("lancamentoNome") String valor) {
 
@@ -67,15 +69,14 @@ public class LancamentoResource {
 	}
 	
 	
-	@GetMapping("/{codigo}")// 	ok																																	Pesquisa lançamento por código
+	@GetMapping("/{codigo}")// 	ok																															Pesquisa lançamento por código
 	@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_LANCAMENTO' ) and #oauth2.hasScope('read') ")
 	public ResponseEntity<?>  buscaLancamentos(@PathVariable long codigo) {
 	
 	return lancamentoRepository.exists(codigo)? ResponseEntity.ok(lancamentoRepository.findOne(codigo)) : ResponseEntity.noContent().build();
 	}
 	
-	//		ok																																		             Pesquisa por data depois do pagamento
-	@GetMapping( params="pagamentoDepoisDe"  )
+	@GetMapping( params="pagamentoDepoisDe"  )//	pesquisa composta ok																		            Pesquisa por data depois do pagamento
 	@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_LANCAMENTO' ) ")
     public List<Lancamento> pesquisaLancamentoPagamentoDepoisDaData(@RequestParam("pagamentoDepoisDe") String dataDepoisDe) {
 		
@@ -86,16 +87,16 @@ public class LancamentoResource {
         return livroLista ;
     }
 	
-	//		ok																	                             													Pesquisa por Descricao  (lancamento)
-	@GetMapping( params = "lancamentoDescricao" )		
+	
+	@GetMapping( params = "lancamentoDescricao" )//		pesquisa composta  ok  																		Pesquisa por Descricao  (lancamento)
 	@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_LANCAMENTO' ) ")
 	public List<Lancamento> pesquisaLancamentoDescricao(@RequestParam("lancamentoDescricao") String valor) {
 
 		return lancamentoRepository.findByDescricaoContainingIgnoreCase(valor);
 	}
 	
-    //  ok 																																					    pesquisa por datas de pagamentos antes do value
-	@GetMapping(params= "pagamentoDataAntesDe" )
+   
+	@GetMapping(params= "pagamentoDataAntesDe" ) //  pesquisa composta ok									    								pesquisa por datas de pagamentos antes do value
 	@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_LANCAMENTO' ) ")
     public List<Lancamento> pesquisaLancamentoPagamentoAntesDaData(@RequestParam("pagamentoDataAntesDe") String value1) {
 		
@@ -106,8 +107,8 @@ public class LancamentoResource {
         return livroLista ;
     }
 	
-	// ok  																																						pesquisa por datas de Vencimento antes do value
-	@GetMapping( "vencimentoDataAntesDe" )
+	
+	@GetMapping( "vencimentoDataAntesDe" )// Pesquisa composta ok																						pesquisa por datas de Vencimento antes do value
 	@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_LANCAMENTO' ) ")
     public List<Lancamento> pesquisaLancamentoVencimentoAntesDaData(@RequestParam("vencimentoDataAntesDe") String value1) {
 		
@@ -118,8 +119,8 @@ public class LancamentoResource {
         return livroLista ;
     }
 	
-    //ok																																						   pesquisa por datas de Vencimento depois do value
-	@GetMapping( "vencimentoDataDepoisDe" )
+    
+	@GetMapping( "vencimentoDataDepoisDe" )//    Pesquisa composta ok													   pesquisa por datas de Vencimento depois do value
 	@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_LANCAMENTO' ) ")
     public List<Lancamento> pesquisaLancamentoVencimentoDepoisDaData(@RequestParam("vencimentoDataDepoisDe") String value1) {
 		
@@ -129,9 +130,8 @@ public class LancamentoResource {
 		
         return livroLista ;
     }
-	
-    // ok																																						   pesquisa Data entre dois valores
-	@GetMapping(params= "lancamentoPagamentoEntre" )
+    
+	@GetMapping(params= "lancamentoPagamentoEntre" )// Pesquisa composta ok																		   pesquisa Data entre dois valores
 	@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_LANCAMENTO' ) ")
     public List<Lancamento> pesquisaLancamentoPagamentoEntreDuasDatas(@RequestParam("lancamentoPagamentoEntre") String value1 , @RequestParam("valor") String value2) {
 		
@@ -144,8 +144,8 @@ public class LancamentoResource {
         return livroLista;
     }
 	
-    //  ok																																							pesquisa entre datas do Vencimento
-	@RequestMapping( params="lancamentoPagamentoEntre" )
+    
+	@RequestMapping( params="lancamentoVencimentoEntre" )//  pesquisa composta ok																pesquisa entre datas do Vencimento
 	@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_LANCAMENTO' ) ")
     public List<Lancamento> pesquisaLancamentoPVencimentoEntreDuasDatas(@RequestParam("lancamentoVencimentoEntre") String value1, @RequestParam("valor") String value2) {
 		
@@ -159,6 +159,95 @@ public class LancamentoResource {
     }
 	
 	
+	// 																																		   Pesquisa Lançamento Avançada composta
+		@GetMapping(params= "pesquisaComposta" )
+		@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_LANCAMENTO' ) ")
+	    public List<Lancamento> pesquisaLancamentoComposta(@RequestParam("pesquisaComposta") String nome1,
+	    			@PathParam("nome2") 			String nome2,
+	    			@PathParam("pagdepoisde") 		String pagdepoisde,
+	    			@PathParam("lanDescricao") 		String lanDescricao,
+	    			@PathParam("pagAntesDe") 		String pagAntesDe,
+	    			@PathParam("venAntesDe") 		String venAntesDe,
+	    			@PathParam("venDepoisDe") 		String venDepoisDe,
+	    			@PathParam("lanPagEntre") 		String lanPagEntre, @PathParam("lanPagE") String lanPagE,
+	    			@PathParam("lanVenEntre") 		String lanVenEntre, @PathParam("lanVenE") String lanVenE
+
+	    			
+	    		) {
+			
+			List<Lancamento> retorno = new ArrayList<Lancamento>() ;
+		
+			List<Lancamento> pesquisa1 = lancamentoRepository.findByPessoaNomeContainingIgnoreCase(nome1);
+			
+			retorno.addAll(pesquisa1) ;
+			
+		
+		
+			if (nome2 != null ) {
+
+				retorno.retainAll(lancamentoRepository.findByPessoaNomeContainingIgnoreCase(nome2));
+			}
+	
+		
+			if (pagdepoisde != null ) {
+				
+				LocalDate 			data			=		LocalDate.parse(pagdepoisde);
+				
+				retorno.retainAll(lancamentoRepository.findByDataPagamentoAfter(data));
+			}
+			
+			
+			if (lanDescricao != null) {
+				
+				retorno.retainAll(lancamentoRepository.findByDescricaoContainingIgnoreCase(lanDescricao)); ;
+			}
+			
+			
+			if (pagAntesDe != null) {
+			
+				LocalDate 			data			=		LocalDate.parse(pagAntesDe);
+				
+				retorno.retainAll(	lancamentoRepository.findByDataPagamentoBefore(data) );
+			}
+		
+			
+			
+			if (venAntesDe != null) {
+				
+				LocalDate 			data			=		LocalDate.parse(venAntesDe);
+				
+				retorno.retainAll(	lancamentoRepository.findByDataVencimentoBefore(data) );
+			}
+
+			
+			if (venDepoisDe != null) {
+				
+				LocalDate 			data			=		LocalDate.parse(venDepoisDe);
+				
+				retorno.retainAll(	lancamentoRepository.findByDataVencimentoAfter(data) );
+			}
+			
+
+			if (lanPagEntre != null && lanPagE != null ) {
+				
+				LocalDate data1	=	LocalDate.parse(lanPagEntre);
+				
+				LocalDate data2	=	LocalDate.parse(lanPagE);
+
+				retorno.retainAll(	lancamentoRepository.findByDataPagamentoBetween(data1, data2) );
+			}
+
+			if (lanVenEntre != null && lanVenE != null ) {
+							
+				LocalDate data1	=	LocalDate.parse(lanVenEntre);
+				
+				LocalDate data2	=	LocalDate.parse(lanVenE);
+	
+				retorno.retainAll( lancamentoRepository.findByDataVencimentoBetween(data1, data2) );
+			}
+
+	        return retorno;
+	    }
 	
 	//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
