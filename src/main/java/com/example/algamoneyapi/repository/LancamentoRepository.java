@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.algamoneyapi.model.Lancamento;
 
-
-
 public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
 
 	List<Lancamento> findByPessoaNomeContainingIgnoreCase   (String value);	//						pesquisa por palavras na Pessoa
@@ -23,10 +21,7 @@ public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
 
 	List<Lancamento> findByDataVencimentoBefore   		(LocalDate data);   //						pesquisa por datas de Vencimento antes do value
 	
-	
-	
 	List<Lancamento> findByDataVencimentoBetween   		(LocalDate data1, LocalDate data2);   //	pesquisa entre datas do Vencimento 		
 	
 	List<Lancamento> findByDataPagamentoBetween   		(LocalDate data1, LocalDate data2);   //	pesquisa entre datas do pagamento
-	
 }

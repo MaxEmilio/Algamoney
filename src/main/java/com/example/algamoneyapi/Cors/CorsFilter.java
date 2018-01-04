@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Order( Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements javax.servlet.Filter {
 
-	String originPermitida	=	"http://localhost:8000";
+	String originPermitida	=	"http://localhost:4200";
 	
 	
 

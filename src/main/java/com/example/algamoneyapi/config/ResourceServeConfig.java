@@ -20,9 +20,9 @@ import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecur
 
 @Configuration
 @EnableWebSecurity
-@EnableResourceServer
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-@Profile("oauth-security")
+//@EnableResourceServer
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@Profile("oauth-security")
 public class ResourceServeConfig extends ResourceServerConfigurerAdapter {
 
 	@Autowired
@@ -31,9 +31,9 @@ public class ResourceServeConfig extends ResourceServerConfigurerAdapter {
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		
-		auth.userDetailsService(userDetailsService).passwordEncoder( passwordEncoder() );
+		//auth.userDetailsService(userDetailsService).passwordEncoder( passwordEncoder() );
 		
-		//auth.inMemoryAuthentication().withUser("admin").password("admin").roles("ROLE");
+		auth.inMemoryAuthentication().withUser("admin").password("admin").roles("ROLE");
 	}
 	
 	@Bean
