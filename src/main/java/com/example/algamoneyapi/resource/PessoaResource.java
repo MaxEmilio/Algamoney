@@ -7,7 +7,9 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.algamoneyapi.event.RecursoCriadoEvent;
 import com.example.algamoneyapi.model.Pessoa;
 import com.example.algamoneyapi.repository.PessoaRepository;
+import com.example.algamoneyapi.repository.PessoaRepositoryPage;
 import com.example.algamoneyapi.service.PessoaService;
 
 @RestController
@@ -35,34 +38,45 @@ public class PessoaResource {
 	private PessoaRepository 			pessoaRepository;
 	
 	@Autowired
+	private PessoaRepositoryPage 			pessoaRepositoryPage;
+	
+	@Autowired
 	private ApplicationEventPublisher 	publisher;
 
 	@Autowired
 	private PessoaService 				pessoaService;
 	
 	
-	//---------------------------------------------------------------------------------------------------------------------------------------  pesquisa 
-	@GetMapping
+	//---------------------------------------------------------------------------------------------------------------------------------------  pesquisa ----------------------
+	@GetMapping( "/resumo" )
 	@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_PESSOA' ) and #oauth2.hasScope('read') ")
 	public List<Pessoa> ConsultarPessoas() {		
 
 		List<Pessoa> pessoas = pessoaRepository.findAll();
 		
 		return pessoas;
-		
 	}
+	
+	@GetMapping
+	@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_PESSOA' ) and #oauth2.hasScope('read') ")
+	public ResponseEntity<?> ConsultarPessoasResumo(@PageableDefault Pageable pageable) {		
+
+		Page<Pessoa> pessoas = pessoaRepositoryPage.findAll( pageable);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(pessoas) ;
+	}
+
 	
 	@GetMapping( params= "porNome")
 	@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_PESSOA' ) and #oauth2.hasScope('read') ")
-	public ResponseEntity<?> ConsultarPessoasPorNome(@RequestParam("porNome") String valor) {		
+	public ResponseEntity<?> ConsultarPessoasPorNome(@RequestParam("porNome") String valor, @PageableDefault Pageable pageable) {		
 
-		List<Pessoa> pessoas = pessoaRepository.findByNomeContainingIgnoreCase(valor);
+		Page<Pessoa> pessoas = pessoaRepositoryPage.findByNomeContainingIgnoreCase(valor, pageable);
 		
-		return ResponseEntity.status(HttpStatus.CREATED).body(pessoas) ;
-		
+		return ResponseEntity.status(HttpStatus.OK).body(pessoas) ;
 	}
 	
-	//----------------------------------------------------
+	//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	@PreAuthorize("hasAuthority( 'ROLE_PESQUISAR_PESSOA' ) and #oauth2.hasScope('read') ")
 	@PostMapping//																														(( Salvar pessoa  ))
@@ -91,14 +105,13 @@ public class PessoaResource {
 	public void apagarPessoa(@PathVariable Long codigo) {
 		
 		pessoaRepository.delete(codigo);
-		
 	}
 	
 	@PreAuthorize("hasAuthority( 'ROLE_CADASTRAR_PESSOA' ) and #oauth2.hasScope('write') ")
-	@PutMapping("/{codigo}")//																												(( 	atualizando Pessoa  ))
-	public ResponseEntity<Pessoa> atualizaPessoa(@PathVariable Long codigo, @Valid @RequestBody Pessoa PessoaEnviada ) {
+	@PutMapping()//																												(( 	atualizando Pessoa  ))
+	public ResponseEntity<Pessoa> atualizaPessoa(@Valid @RequestBody Pessoa pessoaEnviada ) {
 		
-		return ResponseEntity.ok().body(pessoaService.atualizaPessoa(codigo, PessoaEnviada)) ;
+		return ResponseEntity.ok().body(pessoaService.atualizaPessoa(pessoaEnviada.getCodigo(), pessoaEnviada)) ;
 		
 	}
 	
@@ -110,5 +123,4 @@ public class PessoaResource {
 		return  pessoaService.atualizarPropriedadeAtivo(codigo, ativo); 
 		
 	}
-
 }

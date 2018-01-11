@@ -71,6 +71,14 @@ public class LancamentoResource {
 		
 		return  pagingAndSortingRepository.findAll(pageable);
 	}
+	
+	@GetMapping( "/lista" )    //ok																															Pesquisa Geral Simples
+	@ResponseStatus(HttpStatus.OK)
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	public List<Lancamento> buscaLancamentosLista() {
+		
+		return  lancamentoRepository.findAll();
+	}
 
 	
 	@GetMapping( params= "lancamentoNome" )//	ok pesquisa composta																						Pesquisa por Nome Pessoa
@@ -291,11 +299,11 @@ public class LancamentoResource {
 	//-----------------------------------------------------------------------------------------		Delete        ------------------------------------------------------------------------------------------------
 	
 	@DeleteMapping("/{codigo}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@PreAuthorize("hasAuthority( 'ROLE_REMOVER_LANCAMENTO' ) ") 
+	@ResponseStatus(HttpStatus.OK)
+	@PreAuthorize("hasAuthority( 'ROLE_REMOVER_LANCAMENTO' ) and #oauth2.hasScope('write') ") 
 	public void apagarLancamento(@PathVariable Long codigo) {
 
-			lancamentoRepository. delete(codigo);
+			lancamentoRepository.delete(codigo);
 	}
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
