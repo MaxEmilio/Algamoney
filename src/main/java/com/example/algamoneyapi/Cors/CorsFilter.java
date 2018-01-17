@@ -25,7 +25,7 @@ public class CorsFilter implements javax.servlet.Filter {
 
 	@Autowired
 	private AlgamoneyApiProperty algamoneyApiProperty;
-
+	
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
 			throws IOException, ServletException {
